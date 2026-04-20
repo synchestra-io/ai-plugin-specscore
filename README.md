@@ -13,7 +13,7 @@ This repository contains the plugin source. It is installed on top of the [`spec
 
 ## Install
 
-Via the Synchestra.io meta-marketplace:
+Via the [Synchestra.io meta-marketplace](https://github.com/synchestra-io/ai-marketplace):
 
 ```
 /plugin marketplace add synchestra-io/ai-marketplace
