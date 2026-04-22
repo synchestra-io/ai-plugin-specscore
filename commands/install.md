@@ -1,5 +1,5 @@
 ---
-description: Install or update the specscore CLI via the official installer
+description: Show install instructions for the specscore CLI
 ---
 
-Invoke the `specscore:install` skill to install (or update) the `specscore` CLI. Follow the skill exactly — do not run `curl | sh` directly without going through the skill, so the consent and exit-code handling defined there apply.
+Invoke the `specscore:install` skill. It shows the user how to install the `specscore` CLI and then waits for them to run the install in their own shell — do not execute `curl | sh` yourself.

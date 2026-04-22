@@ -1,12 +1,12 @@
 ---
 name: install
-description: Install the specscore CLI via the official get-cli installer. Use when `specscore` is not on PATH, when another skill reports `command not found: specscore`, or when the user asks to install, reinstall, or update the CLI.
+description: Show install instructions for the specscore CLI. Use when `specscore` is not on PATH, when another skill reports `command not found: specscore`, or when the user asks how to install, reinstall, or update the CLI.
 user-invocable: true
 ---
 
 # Install the specscore CLI
 
-This skill installs the [`specscore`](https://github.com/synchestra-io/specscore) CLI — the runtime prerequisite for every other skill in this plugin. It delegates to the official installer at `https://specscore.md/get-cli`, which detects platform and architecture and downloads the matching [GoReleaser](https://goreleaser.com/) archive.
+This skill **shows the user how to install** the [`specscore`](https://github.com/synchestra-io/specscore) CLI — the runtime prerequisite for every other skill in this plugin. It does not execute the installer. The user runs the install command themselves in their own shell.
 
 ## When to use
 
@@ -14,27 +14,32 @@ This skill installs the [`specscore`](https://github.com/synchestra-io/specscore
 - Another skill in this plugin reported `command not found: specscore` or a pre-flight failure.
 - The user explicitly asked to install, reinstall, or update the `specscore` CLI.
 
-## Command
+## Behavior
 
-Run exactly this, once:
+**Do not run `curl … | sh` from this skill.** Piping remote code into a shell is a trust decision that belongs to the user, in their own terminal. Surface the options below, then wait.
+
+## What to show the user
+
+Present both paths and let the user pick:
+
+### 1. One-liner (macOS, Linux, WSL)
 
 ```bash
 curl -fsSL https://specscore.md/get-cli | sh
 ```
 
-Re-running is safe — the installer replaces the existing binary in place. There is no separate update command; re-running this is the update path.
+Re-running is safe — the installer replaces the existing binary in place. This is also the update path; there is no separate update command.
 
-## Exit codes
+### 2. Manual install (all platforms, including native Windows PowerShell)
 
-| Exit code | Meaning | What to do |
-|---|---|---|
-| `0` | Install succeeded | Run `specscore --version` to confirm the binary is on `PATH`, then continue with the user's original request. |
-| non-zero | Install failed | Surface the installer's stderr to the user verbatim and stop. Do not retry silently. |
+Follow the platform-specific instructions at <https://specscore.md/install>, or download the matching archive directly from the [GitHub Releases](https://github.com/synchestra-io/specscore/releases) page.
 
-## Consent
+## Verification
 
-`curl … | sh` executes a remote shell script. In Claude Code, the Bash permission prompt surfaces the exact command before execution — that prompt is the consent boundary. Do not bypass or pre-approve.
+Once the user confirms install is complete, verify with:
 
-## Platforms
+```bash
+specscore --version
+```
 
-The installer covers macOS (`darwin-{amd64,arm64}`), Linux (`linux-{amd64,arm64}`), and Windows via WSL. Windows users running native PowerShell should follow the manual path at [specscore.md/install](https://specscore.md/install) instead of invoking this skill.
+If the binary is found and prints a version, continue with the user's original request. If not, ask the user to check their `PATH` and re-run install.

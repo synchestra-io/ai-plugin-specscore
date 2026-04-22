@@ -61,8 +61,8 @@ Every CLI-wrapper skill must verify that `specscore` is installed before invokin
 > If this check fails (exit `127` / `command not found`), stop and tell the user exactly:
 >
 > > The `specscore` CLI is not installed. Either:
-> > - invoke `/specscore:install` (I will run the installer with your approval), or
-> > - run manually: `curl -fsSL https://specscore.md/get-cli | sh`
+> > - invoke `/specscore:install` to see install options, or
+> > - install directly from <https://specscore.md/install>.
 > >
 > > Then retry your command.
 >
