@@ -22,6 +22,15 @@ Via the [Synchestra.io meta-marketplace](https://github.com/synchestra-io/ai-mar
 
 Requires Claude Code v2.1.110 or later if installed transitively as a dependency of another plugin.
 
+## First use
+
+The `specscore` CLI must be on your `PATH` before any wrapper skill can run. Two options:
+
+- Invoke `/specscore-cli:install` inside Claude Code — the [install skill](skills/install/SKILL.md) wraps the official installer and runs it with your approval.
+- Or run manually in your terminal: `curl -fsSL https://specscore.md/get-cli | sh`.
+
+Verify with `specscore --version`.
+
 ## Relationship to the CLI
 
 The plugin wraps the `specscore` CLI — it does not replace it. Skills encode *when* to call a command, *which* flags to pass, and *how* to interpret exit codes. The CLI contract (commands, flags, exit codes) is defined in [`synchestra-io/specscore`](https://github.com/synchestra-io/specscore).

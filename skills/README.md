@@ -1,6 +1,6 @@
 # Skills
 
-SpecScore skills wrap the `specscore` CLI's command surface. Each skill covers a single CLI resource group; per-verb detail lives under `references/` and loads on demand.
+SpecScore skills fall into two categories: a small set of **infrastructure** skills that handle plugin-level concerns (such as installing the CLI) and a larger set of **CLI-wrapper** skills that expose the `specscore` CLI's command surface to agents. Each CLI-wrapper skill covers a single CLI resource group; per-verb detail lives under `references/` and loads on demand.
 
 See the [agent-skills feature spec](https://github.com/synchestra-io/synchestra/blob/main/spec/features/agent-skills/README.md) for design principles and the progressive-disclosure model. See [ADR-0002](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0002-progressive-disclosure-skills.md) and [ADR-0003](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0003-skill-naming-plugin-namespace.md) for the structural and naming rules.
 
@@ -12,9 +12,20 @@ All skills are prefixed with the plugin's manifest name. Users invoke them as:
 /specscore-cli:<skill-name>
 ```
 
-## Planned skill catalogue
+## Skill categories
 
-The skill catalogue mirrors the `specscore` CLI surface. One resource-level skill per command group, per-verb `references/<verb>.md` inside each.
+- **Infrastructure skills** — plugin-level actions that are not backed by a `specscore` CLI command. Today this category contains only `install`, which bootstraps the CLI itself.
+- **CLI-wrapper skills** — one skill per `specscore` CLI resource group (`feature`, `task`, `spec`, `code`, `idea`). Each wrapper assumes the CLI is already installed and callable; see the [Pre-flight pattern](#pre-flight-pattern) below for the shared check wrappers must include.
+
+## Available infrastructure skills
+
+| Skill | Purpose |
+|---|---|
+| [`install/`](install/SKILL.md) | Install the `specscore` CLI via the official `get-cli` installer. Runtime prerequisite for every wrapper skill. |
+
+## Planned CLI-wrapper catalogue
+
+The wrapper catalogue mirrors the `specscore` CLI surface. One resource-level skill per command group, per-verb `references/<verb>.md` inside each.
 
 | Skill | Wraps | Verbs |
 |---|---|---|
@@ -35,9 +46,35 @@ The exact shape of each resource skill follows the template defined in [`agent-s
     <verb>.md      ← full instructions for one CLI invocation
 ```
 
+## Pre-flight pattern
+
+Every CLI-wrapper skill must verify that `specscore` is installed before invoking it. Copy the block below verbatim into the top of any new wrapper `SKILL.md`:
+
+> ### Pre-flight check
+>
+> Before running any `specscore` command, verify the CLI is installed:
+>
+> ```bash
+> command -v specscore >/dev/null 2>&1
+> ```
+>
+> If this check fails (exit `127` / `command not found`), stop and tell the user exactly:
+>
+> > The `specscore` CLI is not installed. Either:
+> > - invoke `/specscore-cli:install` (I will run the installer with your approval), or
+> > - run manually: `curl -fsSL https://specscore.md/get-cli | sh`
+> >
+> > Then retry your command.
+>
+> Do not proceed with the original command until `specscore --version` succeeds.
+
+When the first wrapper skill lands, this snippet may be extracted to a shared reference file and linked from each `SKILL.md`. Until then, it lives here as the single source of truth.
+
 ## Status
 
-**Scaffold only.** No skills are implemented yet. This README records the planned catalogue; individual skills ship incrementally as they are authored.
+**Shipped:** `install/` (infrastructure).
+
+The CLI-wrapper skills listed above are still planned; individual wrappers ship incrementally as they are authored.
 
 ## Outstanding Questions
 
