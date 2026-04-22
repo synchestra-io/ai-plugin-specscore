@@ -17,7 +17,7 @@ Via the [Synchestra.io meta-marketplace](https://github.com/synchestra-io/ai-mar
 
 ```
 /plugin marketplace add synchestra-io/ai-marketplace
-/plugin install specscore-cli@synchestra-io
+/plugin install specscore@synchestra-io
 ```
 
 Requires Claude Code v2.1.110 or later if installed transitively as a dependency of another plugin.
@@ -26,7 +26,7 @@ Requires Claude Code v2.1.110 or later if installed transitively as a dependency
 
 The `specscore` CLI must be on your `PATH` before any wrapper skill can run. Two options:
 
-- Invoke `/specscore-cli:install` inside Claude Code — the [install skill](skills/install/SKILL.md) wraps the official installer and runs it with your approval.
+- Invoke `/specscore:install` inside Claude Code — the [install skill](skills/install/SKILL.md) wraps the official installer and runs it with your approval.
 - Or run manually in your terminal: `curl -fsSL https://specscore.md/get-cli | sh`.
 
 Verify with `specscore --version`.
@@ -39,13 +39,13 @@ A change in the CLI surface typically produces a matching skill update in this r
 
 ## Relationship to other plugins
 
-`specscore-cli` is a base-layer **CLI wrapper** plugin. Methodology plugins such as [`spec-driven-development`](https://github.com/synchestra-io/ai-plugin-sdd) depend on it to compose multi-step workflows. See [ADR-0004](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0004-layered-plugin-architecture.md) for the full layering rationale.
+`specscore` is a base-layer **CLI wrapper** plugin. Methodology plugins such as [`spec-driven-development`](https://github.com/synchestra-io/ai-plugin-sdd) depend on it to compose multi-step workflows. See [ADR-0004](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0004-layered-plugin-architecture.md) for the full layering rationale.
 
 Sister plugin: [`synchestra-cli`](https://github.com/synchestra-io/ai-plugin-synchestra) — wraps the `synchestra` CLI using the same structure.
 
 ## Releases
 
-Releases are tagged as `specscore-cli--v<version>` on this repository to support Claude Code's dependency resolution. See [ADR-0004](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0004-layered-plugin-architecture.md#follow-ups) for the convention.
+Releases are tagged as `specscore--v<version>` on this repository to support Claude Code's dependency resolution. See [ADR-0004](https://github.com/synchestra-io/synchestra/blob/main/spec/decisions/0004-layered-plugin-architecture.md#follow-ups) for the convention.
 
 ## License
 

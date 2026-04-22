@@ -2,13 +2,13 @@
 
 ## Problem Statement
 
-**How might we ensure that after `/plugin install specscore-cli@synchestra-io`, the very next `/specscore-cli:*` invocation succeeds — without making the plugin itself own multi-platform binary distribution?**
+**How might we ensure that after `/plugin install specscore@synchestra-io`, the very next `/specscore:*` invocation succeeds — without making the plugin itself own multi-platform binary distribution?**
 
 Today there is an implicit gap: the plugin README declares the `specscore` CLI a prerequisite, but nothing in the plugin surface helps the user cross that gap. A human runs `/plugin install`, invokes a skill, and gets `command not found: specscore` with no in-context path forward.
 
 ## Recommended Direction
 
-Ship a single skill — `/specscore-cli:install` — that wraps the existing `curl -fsSL https://specscore.md/get-cli | sh` installer. Every other skill in the plugin performs a pre-flight `command -v specscore` check; on miss, it emits a single error that references both paths (invoke the install skill, or run the curl command manually). Reject bundling binaries, reject a SessionStart hook, reject a long-lived "doctor" skill.
+Ship a single skill — `/specscore:install` — that wraps the existing `curl -fsSL https://specscore.md/get-cli | sh` installer. Every other skill in the plugin performs a pre-flight `command -v specscore` check; on miss, it emits a single error that references both paths (invoke the install skill, or run the curl command manually). Reject bundling binaries, reject a SessionStart hook, reject a long-lived "doctor" skill.
 
 This direction leans on three assets the project already has: (1) the `get-cli` script at `specscore.md/get-cli` already handles platform detection (darwin/linux/windows × amd64/arm64) by pulling the right GoReleaser archive from GitHub releases — the plugin does not re-solve multi-platform; (2) Claude Code's existing Bash permission prompt *is* the consent UI for agent-executed installers — we do not invent a new one; (3) the CLI guarantees no breaking changes and "always latest" is acceptable (Q5), which collapses the version-enforcement job to nothing and eliminates the need for a doctor skill.
 
@@ -24,7 +24,7 @@ The pattern ports cleanly to sibling plugins (`synchestra-cli` has the same shap
 
 **In:**
 - `skills/install/SKILL.md` — single skill, invokes `curl -fsSL https://specscore.md/get-cli | sh` via Bash tool.
-- Shared pre-flight text used across all skills in the plugin: `command -v specscore` check, and on miss, a two-option error (invoke `/specscore-cli:install` OR run the curl manually). Location TBD (see Open Questions).
+- Shared pre-flight text used across all skills in the plugin: `command -v specscore` check, and on miss, a two-option error (invoke `/specscore:install` OR run the curl manually). Location TBD (see Open Questions).
 - README update: add a short "First use" paragraph pointing at the install skill, complementing the existing "CLI is a prerequisite" line.
 
 **Out:**
@@ -45,5 +45,5 @@ The pattern ports cleanly to sibling plugins (`synchestra-cli` has the same shap
 
 - **Shape of the shared pre-flight.** Inline in each `SKILL.md`, a common `references/preflight.md` that every skill links, or a plugin-level convention documented once in `skills/README.md`? This is style, not architecture — decide at implementation time.
 - **Wording of the error message.** Needs to make both paths (skill invocation vs manual curl) legible without being verbose. One iteration after seeing it render.
-- **Does `/specscore-cli:install` need a `--force` / re-install mode?** For v1, no — "always latest, no breaking changes" means re-running the script is safe and idempotent enough. Revisit if that assumption breaks.
+- **Does `/specscore:install` need a `--force` / re-install mode?** For v1, no — "always latest, no breaking changes" means re-running the script is safe and idempotent enough. Revisit if that assumption breaks.
 - **Should the same pattern be documented once for re-use by `synchestra-cli` and future sibling wrapper plugins?** Likely yes, but belongs in a Synchestra-level ADR, not this plugin's docs.

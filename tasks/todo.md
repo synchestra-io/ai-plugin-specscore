@@ -18,7 +18,7 @@
 ### Checkpoint A — end-to-end install works
 - [ ] `which specscore` on a clean machine returns empty
 - [ ] Local plugin install succeeds
-- [ ] `/specscore-cli:install` appears in slash menu
+- [ ] `/specscore:install` appears in slash menu
 - [ ] Bash permission prompt renders the exact `curl ... | sh` command
 - [ ] After approval, `which specscore` resolves
 - [ ] `specscore --version` returns a semver
@@ -32,7 +32,7 @@
 - [ ] Add `install` row to the planned skill catalogue (category: Infrastructure)
 - [ ] Add "Skill categories" subsection (Infrastructure vs CLI-wrapper, ≤ 5 sentences)
 - [ ] Add "Pre-flight pattern" subsection with canonical copy-paste snippet
-- [ ] Snippet mentions both paths in the error (invoke `/specscore-cli:install` + manual curl)
+- [ ] Snippet mentions both paths in the error (invoke `/specscore:install` + manual curl)
 - [ ] Update "Status: Scaffold only" note to reflect install is shipped
 - [ ] All relative links resolve
 
@@ -51,5 +51,5 @@
 ### Checkpoint B — ready for review
 - [ ] `skills/README.md` + `README.md` render cleanly on GitHub (push to a branch)
 - [ ] All relative links resolve
-- [ ] First-time-reader walkthrough: `/plugin install` → README → `/specscore-cli:install` → working CLI, with no dead ends
+- [ ] First-time-reader walkthrough: `/plugin install` → README → `/specscore:install` → working CLI, with no dead ends
 - [ ] Human review + approval before commit/PR

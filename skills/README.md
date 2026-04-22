@@ -9,7 +9,7 @@ See the [agent-skills feature spec](https://github.com/synchestra-io/synchestra/
 All skills are prefixed with the plugin's manifest name. Users invoke them as:
 
 ```
-/specscore-cli:<skill-name>
+/specscore:<skill-name>
 ```
 
 ## Skill categories
@@ -61,7 +61,7 @@ Every CLI-wrapper skill must verify that `specscore` is installed before invokin
 > If this check fails (exit `127` / `command not found`), stop and tell the user exactly:
 >
 > > The `specscore` CLI is not installed. Either:
-> > - invoke `/specscore-cli:install` (I will run the installer with your approval), or
+> > - invoke `/specscore:install` (I will run the installer with your approval), or
 > > - run manually: `curl -fsSL https://specscore.md/get-cli | sh`
 > >
 > > Then retry your command.

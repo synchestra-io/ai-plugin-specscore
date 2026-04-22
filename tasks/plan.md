@@ -4,15 +4,15 @@
 
 ## Overview
 
-Ship `/specscore-cli:install` — a single skill that wraps the existing `curl -fsSL https://specscore.md/get-cli | sh` installer — and document a pre-flight convention that every future CLI-wrapper skill in this plugin will follow. The plan is markdown-only: three files touched, no runtime code, no binary distribution, no hooks. Verification is end-to-end manual install from a clean machine.
+Ship `/specscore:install` — a single skill that wraps the existing `curl -fsSL https://specscore.md/get-cli | sh` installer — and document a pre-flight convention that every future CLI-wrapper skill in this plugin will follow. The plan is markdown-only: three files touched, no runtime code, no binary distribution, no hooks. Verification is end-to-end manual install from a clean machine.
 
 ## Architecture Decisions
 
 These decisions resolve the "Open Questions" section of the one-pager before implementation begins. They are made *here* (at plan time) rather than per-task so implementation never stalls on a style call.
 
-1. **Install skill lives at `skills/install/SKILL.md`.** Directory name `install` — not `specscore-install` — to avoid the double-prefix problem called out in ADR-0003. Rendered invocation: `/specscore-cli:install`.
+1. **Install skill lives at `skills/install/SKILL.md`.** Directory name `install` — not `specscore-install` — to avoid the double-prefix problem called out in ADR-0003. Rendered invocation: `/specscore:install`.
 
-2. **`user-invocable: true`.** Install is a human entry point on first use, exactly the case ADR-0005 calls out for `true`. A human who just ran `/plugin install` should be able to type `/specscore-cli:install` and see it in the slash menu without needing Claude to auto-invoke it.
+2. **`user-invocable: true`.** Install is a human entry point on first use, exactly the case ADR-0005 calls out for `true`. A human who just ran `/plugin install` should be able to type `/specscore:install` and see it in the slash menu without needing Claude to auto-invoke it.
 
 3. **Install is "infrastructure," not a CLI-wrapper.** It does not wrap a `specscore install` CLI command (no such command exists). This makes it the first *infrastructure* skill in the plugin, distinct from the planned resource-verb skills (`feature/`, `task/`, `spec/`, etc.). `skills/README.md` will grow a short section distinguishing the two categories.
 
@@ -27,7 +27,7 @@ These decisions resolve the "Open Questions" section of the one-pager before imp
 ```
 Task 1: skills/install/SKILL.md
    │
-   ├── references to → /specscore-cli:install (self)
+   ├── references to → /specscore:install (self)
    │
    └── prerequisite for →
          │
@@ -63,7 +63,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 **Verification:**
 - [ ] Visual review: frontmatter parses as YAML (no tab/indent errors).
 - [ ] Visual review: description is ≤ 1 sentence, names the outcome, would realistically match a user asking "install specscore."
-- [ ] Manual end-to-end (deferred to checkpoint): on a machine without `specscore`, installing this plugin locally and invoking `/specscore-cli:install` results in `specscore` on `$PATH`.
+- [ ] Manual end-to-end (deferred to checkpoint): on a machine without `specscore`, installing this plugin locally and invoking `/specscore:install` results in `specscore` on `$PATH`.
 
 **Dependencies:** None.
 
@@ -84,7 +84,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 - [ ] Catalogue table in `skills/README.md` includes an `install` row with category = Infrastructure and a link to `install/SKILL.md`.
 - [ ] New "Skill categories" subsection explains the Infrastructure vs CLI-wrapper distinction in ≤ 5 sentences.
 - [ ] New "Pre-flight pattern" subsection contains the canonical pre-flight snippet as a fenced code block, the exact error message text, and a one-sentence instruction: *future wrapper skills include this snippet at the top of their `SKILL.md`*.
-- [ ] The two-path error wording mentions both options (invoke `/specscore-cli:install` **and** the manual `curl | sh` fallback).
+- [ ] The two-path error wording mentions both options (invoke `/specscore:install` **and** the manual `curl | sh` fallback).
 - [ ] The existing "Status: Scaffold only" note is updated to reflect that install is the first shipped skill.
 
 **Verification:**
@@ -92,7 +92,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 - [ ] Visual review: the pre-flight snippet is syntactically valid bash and actually runs (`command -v specscore >/dev/null 2>&1 || { ...; exit 1; }`) — test by pasting into a shell.
 - [ ] Re-read as a prospective skill author: is the pre-flight snippet copy-pasteable without modification? If it needs edits per skill, the snippet is wrong.
 
-**Dependencies:** Task 1 (the pre-flight snippet references `/specscore-cli:install`, which must exist as a path before we document it).
+**Dependencies:** Task 1 (the pre-flight snippet references `/specscore:install`, which must exist as a path before we document it).
 
 **Files likely touched:**
 - `skills/README.md` (edit)
@@ -105,7 +105,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 
 #### Task 3: Update root `README.md` — "First use" paragraph
 
-**Description:** Add a short section after the existing "Install" block that walks a first-time user through the single additional step required after `/plugin install`: invoke `/specscore-cli:install` (or run the manual curl fallback). Keep the existing "CLI is a prerequisite" sentence — the new section clarifies *how* to satisfy that prerequisite without leaving Claude Code.
+**Description:** Add a short section after the existing "Install" block that walks a first-time user through the single additional step required after `/plugin install`: invoke `/specscore:install` (or run the manual curl fallback). Keep the existing "CLI is a prerequisite" sentence — the new section clarifies *how* to satisfy that prerequisite without leaving Claude Code.
 
 **Acceptance criteria:**
 - [ ] New "First use" section appears after the existing "Install" section, before "Relationship to the CLI."
@@ -132,7 +132,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 
 - [ ] `skills/install/SKILL.md` exists and parses.
 - [ ] Local plugin install path chosen: either `/plugin install` from a file-system path, or `/plugin marketplace add` from a local/test marketplace. Document which in the commit message.
-- [ ] On a machine without `specscore` (confirm with `which specscore` = empty), install this plugin locally, invoke `/specscore-cli:install`, approve the Bash permission prompt, and confirm `which specscore` now resolves.
+- [ ] On a machine without `specscore` (confirm with `which specscore` = empty), install this plugin locally, invoke `/specscore:install`, approve the Bash permission prompt, and confirm `which specscore` now resolves.
 - [ ] Invoke `specscore --version` and confirm it returns a semver. This is the true end-to-end success signal.
 
 **If Checkpoint A fails:** Stop. The install skill is the load-bearing piece; Tasks 2–3 are documentation around it. Do not proceed.
@@ -141,7 +141,7 @@ Strictly sequential. Each task is single-file, S-sized. No parallelism opportuni
 
 - [ ] `skills/README.md` and `README.md` render cleanly on GitHub (push to a branch and eyeball).
 - [ ] All relative links resolve (`./install/SKILL.md`, plugin manifest, ADRs).
-- [ ] A fresh reader can go from "I just ran `/plugin install specscore-cli@synchestra-io`" to "I have a working `specscore` CLI" using only the repo's README and one slash invocation.
+- [ ] A fresh reader can go from "I just ran `/plugin install specscore@synchestra-io`" to "I have a working `specscore` CLI" using only the repo's README and one slash invocation.
 - [ ] Human review + approval before commit/PR.
 
 ---

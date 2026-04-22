@@ -1,5 +1,5 @@
 {
-  "name": "specscore-cli",
+  "name": "specscore",
   "description": "SpecScore CLI plugin: skills that teach AI agents how to use the specscore CLI for spec navigation, linting, and lifecycle operations.",
   "version": "0.0.1",
   "author": {
